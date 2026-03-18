@@ -738,6 +738,9 @@
                     </div>
                 </div>
 
+                <!-- Hidden Date Field -->
+                <input type="hidden" id="field-date" name="date" value="">
+
                 <!-- Submit Button -->
                 <button type="submit" class="submit-btn" id="submit-btn">
                     <span class="btn-text">REGISTER NOW</span>
@@ -764,6 +767,10 @@
 
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
+
+            // Set current timestamp
+            const now = new Date();
+            document.getElementById('field-date').value = now.toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
 
             // Disable & show loading
             submitBtn.classList.add('loading');
