@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PAAV Esports — Player Registration</title>
+    <meta name="description"
+        content="Register as a player for PAAV Esports. Join our competitive gaming community today.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        /* ── Reset & Base ──────────────────────────────────── */
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-dark: #0a0a14;
+            --bg-card: rgba(15, 15, 30, 0.85);
+            --border-glow: rgba(138, 43, 226, 0.35);
+            --accent-primary: #a855f7;
+            --accent-secondary: #06d6a0;
+            --accent-cyan: #22d3ee;
+            --text-primary: #f0f0ff;
+            --text-muted: #9ca3af;
+            --text-label: #c4b5fd;
+            --input-bg: rgba(20, 20, 45, 0.7);
+            --input-border: rgba(138, 43, 226, 0.25);
+            --input-focus: rgba(168, 85, 247, 0.6);
+            --danger: #ef4444;
+            --success-bg: rgba(6, 214, 160, 0.15);
+            --success-border: rgba(6, 214, 160, 0.4);
+            --font-display: 'Orbitron', sans-serif;
+            --font-body: 'Inter', sans-serif;
+            --radius: 12px;
+            --radius-sm: 8px;
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* ── Animated Background ───────────────────────────── */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background:
+                url('assets/bg.png') center/cover no-repeat,
+                linear-gradient(135deg, #0a0a14 0%, #1a0a2e 50%, #0a0a14 100%);
+            opacity: 0.5;
+            z-index: 0;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 600px 400px at 20% 30%, rgba(168, 85, 247, 0.08) 0%, transparent 70%),
+                radial-gradient(ellipse 500px 350px at 80% 70%, rgba(34, 211, 238, 0.06) 0%, transparent 70%);
+            z-index: 0;
+            animation: bgPulse 8s ease-in-out infinite alternate;
+        }
+
+        @keyframes bgPulse {
+            0% {
+                opacity: 0.6;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        /* ── Floating Particles ────────────────────────────── */
+        .particles {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: var(--accent-primary);
+            border-radius: 50%;
+            opacity: 0;
+            animation: float linear infinite;
+        }
+
+        .particle:nth-child(1) {
+            left: 10%;
+            animation-duration: 14s;
+            animation-delay: 0s;
+        }
+
+        .particle:nth-child(2) {
+            left: 25%;
+            animation-duration: 18s;
+            animation-delay: 2s;
+            background: var(--accent-cyan);
+        }
+
+        .particle:nth-child(3) {
+            left: 40%;
+            animation-duration: 12s;
+            animation-delay: 4s;
+        }
+
+        .particle:nth-child(4) {
+            left: 55%;
+            animation-duration: 20s;
+            animation-delay: 1s;
+            background: var(--accent-secondary);
+        }
+
+        .particle:nth-child(5) {
+            left: 70%;
+            animation-duration: 16s;
+            animation-delay: 3s;
+        }
+
+        .particle:nth-child(6) {
+            left: 85%;
+            animation-duration: 15s;
+            animation-delay: 5s;
+            background: var(--accent-cyan);
+        }
+
+        .particle:nth-child(7) {
+            left: 15%;
+            animation-duration: 22s;
+            animation-delay: 6s;
+        }
+
+        .particle:nth-child(8) {
+            left: 50%;
+            animation-duration: 13s;
+            animation-delay: 0.5s;
+            background: var(--accent-secondary);
+        }
+
+        .particle:nth-child(9) {
+            left: 65%;
+            animation-duration: 17s;
+            animation-delay: 3.5s;
+        }
+
+        .particle:nth-child(10) {
+            left: 90%;
+            animation-duration: 19s;
+            animation-delay: 1.5s;
+            background: var(--accent-cyan);
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) scale(0);
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 0.6;
+            }
+
+            90% {
+                opacity: 0.6;
+            }
+
+            100% {
+                transform: translateY(-10vh) scale(1.2);
+                opacity: 0;
+            }
+        }
+
+        /* ── Main Container ────────────────────────────────── */
+        .main-container {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 520px;
+            margin: 2rem 1rem;
+            animation: slideUp 0.8s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ── Card ──────────────────────────────────────────── */
+        .card {
+            background: var(--bg-card);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid var(--border-glow);
+            border-radius: 20px;
+            padding: 2.5rem 2rem;
+            position: relative;
+            overflow: hidden;
+            box-shadow:
+                0 0 40px rgba(168, 85, 247, 0.08),
+                0 25px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        /* corner accents */
+        .card::before,
+        .card::after {
+            content: '';
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            border: 2px solid transparent;
+            pointer-events: none;
+            transition: var(--transition);
+        }
+
+        .card::before {
+            top: -1px;
+            left: -1px;
+            border-top-color: var(--accent-primary);
+            border-left-color: var(--accent-primary);
+            border-radius: 20px 0 0 0;
+        }
+
+        .card::after {
+            bottom: -1px;
+            right: -1px;
+            border-bottom-color: var(--accent-cyan);
+            border-right-color: var(--accent-cyan);
+            border-radius: 0 0 20px 0;
+        }
+
+        .card:hover::before,
+        .card:hover::after {
+            width: 90px;
+            height: 90px;
+        }
+
+        /* top glow bar */
+        .glow-bar {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent-primary), var(--accent-cyan), transparent);
+            border-radius: 2px;
+        }
+
+        /* ── Logo & Header ─────────────────────────────────── */
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo-wrapper {
+            width: 90px;
+            height: 90px;
+            margin: 0 auto 1rem;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.15), rgba(34, 211, 238, 0.15));
+            border: 2px solid var(--border-glow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            animation: logoPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes logoPulse {
+
+            0%,
+            100% {
+                box-shadow: 0 0 15px rgba(168, 85, 247, 0.2);
+            }
+
+            50% {
+                box-shadow: 0 0 30px rgba(168, 85, 247, 0.4), 0 0 60px rgba(34, 211, 238, 0.1);
+            }
+        }
+
+        .logo-wrapper img {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+            filter: drop-shadow(0 0 6px rgba(168, 85, 247, 0.5));
+        }
+
+        .header h1 {
+            font-family: var(--font-display);
+            font-weight: 800;
+            font-size: 1.6rem;
+            letter-spacing: 3px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.4rem;
+        }
+
+        .header p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            letter-spacing: 1px;
+            font-weight: 300;
+        }
+
+        .header .divider {
+            width: 60px;
+            height: 3px;
+            margin: 0.8rem auto 0;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-cyan));
+            border-radius: 3px;
+        }
+
+        /* ── Form Fields ───────────────────────────────────── */
+        .form-group {
+            margin-bottom: 1.25rem;
+            position: relative;
+            animation: fieldFade 0.6s ease-out backwards;
+        }
+
+        .form-group:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .form-group:nth-child(2) {
+            animation-delay: 0.15s;
+        }
+
+        .form-group:nth-child(3) {
+            animation-delay: 0.2s;
+        }
+
+        .form-group:nth-child(4) {
+            animation-delay: 0.25s;
+        }
+
+        .form-group:nth-child(5) {
+            animation-delay: 0.3s;
+        }
+
+        .form-group:nth-child(6) {
+            animation-delay: 0.35s;
+        }
+
+        @keyframes fieldFade {
+            from {
+                opacity: 0;
+                transform: translateX(-15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-label);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 0.45rem;
+            font-family: var(--font-display);
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper .icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1rem;
+            color: var(--text-muted);
+            transition: color var(--transition);
+            pointer-events: none;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 0.8rem 0.9rem 0.8rem 2.65rem;
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+            font-weight: 400;
+            transition: var(--transition);
+            outline: none;
+        }
+
+        .form-group input::placeholder {
+            color: rgba(156, 163, 175, 0.5);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: var(--input-focus);
+            box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.15), 0 0 20px rgba(168, 85, 247, 0.08);
+        }
+
+        .form-group input:focus~.icon,
+        .form-group select:focus~.icon {
+            color: var(--accent-primary);
+        }
+
+        /* select specific */
+        .form-group select {
+            appearance: none;
+            cursor: pointer;
+        }
+
+        .form-group select option {
+            background: #1a1a30;
+            color: var(--text-primary);
+        }
+
+        /* ── Submit Button ─────────────────────────────────── */
+        .submit-btn {
+            width: 100%;
+            padding: 0.95rem;
+            margin-top: 0.75rem;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-family: var(--font-display);
+            font-size: 0.9rem;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: #fff;
+            background: linear-gradient(135deg, var(--accent-primary), #7c3aed, var(--accent-cyan));
+            background-size: 200% 200%;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: var(--transition);
+            animation: gradientShift 4s ease infinite;
+        }
+
+        @keyframes gradientShift {
+
+            0%,
+            100% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+        }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, transparent 30%, rgba(255, 255, 255, 0.15) 50%, transparent 70%);
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+
+        .submit-btn:hover::before {
+            transform: translateX(100%);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(168, 85, 247, 0.35), 0 0 60px rgba(168, 85, 247, 0.1);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0) scale(0.98);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .submit-btn .btn-text {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ── Loading Spinner ───────────────────────────────── */
+        .spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .submit-btn.loading .btn-text {
+            display: none;
+        }
+
+        .submit-btn.loading .spinner {
+            display: inline-block;
+        }
+
+        /* ── Success / Error Message ───────────────────────── */
+        .message {
+            margin-top: 1.25rem;
+            padding: 1rem 1.25rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.85rem;
+            font-weight: 500;
+            text-align: center;
+            display: none;
+            animation: msgPop 0.4s ease;
+        }
+
+        @keyframes msgPop {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .message.success {
+            display: block;
+            background: var(--success-bg);
+            border: 1px solid var(--success-border);
+            color: var(--accent-secondary);
+        }
+
+        .message.error {
+            display: block;
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: var(--danger);
+        }
+
+        .message .msg-icon {
+            font-size: 1.4rem;
+            display: block;
+            margin-bottom: 0.3rem;
+        }
+
+        /* ── Footer ────────────────────────────────────────── */
+        .footer {
+            text-align: center;
+            margin-top: 1.5rem;
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            letter-spacing: 1px;
+        }
+
+        .footer span {
+            color: var(--accent-primary);
+            font-weight: 600;
+        }
+
+        /* ── Responsive ────────────────────────────────────── */
+        @media (max-width: 560px) {
+            .card {
+                padding: 2rem 1.25rem;
+            }
+
+            .header h1 {
+                font-size: 1.3rem;
+                letter-spacing: 2px;
+            }
+
+            .logo-wrapper {
+                width: 72px;
+                height: 72px;
+            }
+
+            .logo-wrapper img {
+                width: 48px;
+                height: 48px;
+            }
+        }
+
+        /* ── Validation styles ─────────────────────────────── */
+        .form-group input:invalid:not(:placeholder-shown) {
+            border-color: var(--danger);
+        }
+
+        .form-group input:valid:not(:placeholder-shown) {
+            border-color: rgba(6, 214, 160, 0.4);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Floating Particles -->
+    <div class="particles">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <div class="card">
+            <div class="glow-bar"></div>
+
+            <!-- Header -->
+            <div class="header">
+                <div class="logo-wrapper">
+                    <img src="assets/logo.png" alt="PAAV Esports Logo" id="logo-img">
+                </div>
+                <h1>PAAV ESPORTS</h1>
+                <p>Player Registration Portal</p>
+                <div class="divider"></div>
+            </div>
+
+            <!-- Form -->
+            <form name="paav" id="registration-form" autocomplete="off">
+
+                <!-- Name -->
+                <div class="form-group">
+                    <label for="field-name">Player Name</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="field-name" name="name" placeholder="Enter your name" required
+                            minlength="2">
+                        <span class="icon">👤</span>
+                    </div>
+                </div>
+
+                <!-- Gender -->
+                <div class="form-group">
+                    <label for="field-gender">Gender</label>
+                    <div class="input-wrapper">
+                        <select id="field-gender" name="gender" required>
+                            <option value="" disabled selected>Select gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                            <option value="Prefer not to say">Prefer not to say</option>
+                        </select>
+                        <span class="icon">⚧</span>
+                    </div>
+                </div>
+
+                <!-- Age -->
+                <div class="form-group">
+                    <label for="field-age">Age</label>
+                    <div class="input-wrapper">
+                        <input type="number" id="field-age" name="age" placeholder="Your age" required min="13"
+                            max="99">
+                        <span class="icon">🎂</span>
+                    </div>
+                </div>
+
+                <!-- Discord -->
+                <div class="form-group">
+                    <label for="field-discord">Discord ID</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="field-discord" name="discord" placeholder="e.g. username#1234" required>
+                        <span class="icon">💬</span>
+                    </div>
+                </div>
+
+                <!-- Phone -->
+                <div class="form-group">
+                    <label for="field-phone">Phone Number</label>
+                    <div class="input-wrapper">
+                        <input type="tel" id="field-phone" name="phone" placeholder="Your phone number" required
+                            pattern="[0-9]{10,15}">
+                        <span class="icon">📱</span>
+                    </div>
+                </div>
+
+                <!-- Game ID -->
+                <div class="form-group">
+                    <label for="field-gameid">In-Game ID</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="field-gameid" name="gameid" placeholder="Your in-game ID" required>
+                        <span class="icon">🎮</span>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="submit-btn" id="submit-btn">
+                    <span class="btn-text">REGISTER NOW</span>
+                    <div class="spinner"></div>
+                </button>
+
+                <!-- Message -->
+                <div class="message" id="form-message"></div>
+            </form>
+
+            <!-- Footer -->
+            <div class="footer">
+                &copy; 2026 <span>PAAV ESPORTS</span> — All Rights Reserved
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbyZ5Ib2bmYLuAC6oBb111vb1pjab6MSkWGgxMShIS8Nf5tbrd5G9qOuYkbjbUZfizfp/exec';
+
+        const form = document.getElementById('registration-form');
+        const submitBtn = document.getElementById('submit-btn');
+        const msgBox = document.getElementById('form-message');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            // Disable & show loading
+            submitBtn.classList.add('loading');
+            submitBtn.disabled = true;
+            msgBox.className = 'message';   // reset
+
+            try {
+                const response = await fetch(scriptURL, {
+                    method: 'POST',
+                    body: new FormData(form)
+                });
+
+                // Show success
+                msgBox.innerHTML = '<span class="msg-icon">🎉</span>Registration successful! Welcome aboard, soldier. We\'ll contact you soon.';
+                msgBox.className = 'message success';
+
+                // Reset form after a short delay
+                setTimeout(() => {
+                    form.reset();
+                }, 1500);
+
+            } catch (error) {
+                msgBox.innerHTML = '<span class="msg-icon">⚠️</span>Something went wrong. Please try again later.';
+                msgBox.className = 'message error';
+            } finally {
+                submitBtn.classList.remove('loading');
+                submitBtn.disabled = false;
+            }
+        });
+
+        // Subtle parallax on card when mouse moves
+        const card = document.querySelector('.card');
+        document.addEventListener('mousemove', (e) => {
+            const xAxis = (window.innerWidth / 2 - e.pageX) / 80;
+            const yAxis = (window.innerHeight / 2 - e.pageY) / 80;
+            card.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+        });
+
+        document.addEventListener('mouseleave', () => {
+            card.style.transform = 'rotateY(0) rotateX(0)';
+        });
+    </script>
+</body>
+
+</html>
