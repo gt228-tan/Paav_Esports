@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PAAV Esports — Registered Players</title>
+    <meta name="description" content="View all registered players in the PAAV Esports community.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./CSS/paav.css">
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-inner">
+            <a href="index.html" class="navbar-brand">PAAV ESPORTS</a>
+            <ul class="navbar-links">
+                <li><a href="index.html" class="active">Home</a></li>
+                <li><a href="memories.html">Memories</a></li>
+                <li><a href="register.html">Register</a></li>
+                <li><a href="players.html">Players</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Page Content -->
+    <div class="page-container">
+        <div class="card">
+            <div class="top-accent"></div>
+
+            <!-- Header -->
+            <div class="section-header">
+                <h1>REGISTERED PLAYERS</h1>
+                <p>PAAV Esports Community Roster</p>
+                <div class="divider"></div>
+            </div>
+
+            <!-- Stats Bar -->
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <div class="stat-number" id="total-players">—</div>
+                    <div class="stat-label">Total Players</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="male-count">—</div>
+                    <div class="stat-label">Male</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="female-count">—</div>
+                    <div class="stat-label">Female</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="other-count">—</div>
+                    <div class="stat-label">Other</div>
+                </div>
+            </div>
+
+            <!-- Controls -->
+            <div class="controls">
+                <div class="search-box">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="search-input" placeholder="Search by name, Discord ID, Game ID...">
+                </div>
+                <button class="control-btn" id="refresh-btn" title="Refresh data">
+                    <span class="refresh-icon">🔄</span>
+                    Refresh
+                </button>
+                <a href="index.html" class="control-btn">
+                    ← Register
+                </a>
+            </div>
+
+            <!-- Loading State -->
+            <div class="loading-state" id="loading-state">
+                <div class="loading-spinner"></div>
+                <p>Loading Players...</p>
+            </div>
+
+            <!-- Error State -->
+            <div class="error-state" id="error-state">
+                <div class="error-icon">⚠️</div>
+                <h3>FAILED TO LOAD DATA</h3>
+                <p>Could not fetch player data. Please check your connection and try again.</p>
+                <button class="retry-btn" id="retry-btn">Retry</button>
+            </div>
+
+            <!-- Empty State -->
+            <div class="empty-state" id="empty-state">
+                <div class="empty-icon">📋</div>
+                <h3>NO PLAYERS REGISTERED YET</h3>
+                <p>Be the first to register and join the community!</p>
+            </div>
+
+            <!-- No search results -->
+            <div class="no-results" id="no-results">
+                No players found matching your search.
+            </div>
+
+            <!-- Table -->
+            <div class="table-wrapper" id="table-wrapper" style="display:none;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Player Name</th>
+                            <th>Gender</th>
+                            <th>Age</th>
+                            <th>Discord ID</th>
+                            <!-- <th>Phone</th> -->
+                            <th>Game ID</th>
+                            <th>Registered</th>
+                        </tr>
+                    </thead>
+                    <tbody id="players-tbody">
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Footer -->
+            <div class="page-footer">
+                &copy; 2026 <span>PAAV ESPORTS</span> — All Rights Reserved
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ─── Configuration ──────────────────────────────────────
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyZ5Ib2bmYLuAC6oBb111vb1pjab6MSkWGgxMShIS8Nf5tbrd5G9qOuYkbjbUZfizfp/exec';
+
+        // ─── DOM Elements ───────────────────────────────────────
+        const loadingState = document.getElementById('loading-state');
+        const errorState = document.getElementById('error-state');
+        const emptyState = document.getElementById('empty-state');
+        const noResults = document.getElementById('no-results');
+        const tableWrapper = document.getElementById('table-wrapper');
+        const tbody = document.getElementById('players-tbody');
+        const searchInput = document.getElementById('search-input');
+        const refreshBtn = document.getElementById('refresh-btn');
+        const retryBtn = document.getElementById('retry-btn');
+
+        // Stats
+        const totalEl = document.getElementById('total-players');
+        const maleEl = document.getElementById('male-count');
+        const femaleEl = document.getElementById('female-count');
+        const otherEl = document.getElementById('other-count');
+
+        let allPlayers = [];
+
+        // ─── Fetch Players ──────────────────────────────────────
+        async function fetchPlayers() {
+            // Show loading, hide everything else
+            loadingState.style.display = 'block';
+            errorState.style.display = 'none';
+            emptyState.style.display = 'none';
+            noResults.style.display = 'none';
+            tableWrapper.style.display = 'none';
+            searchInput.value = '';
+
+            try {
+                const response = await fetch(SCRIPT_URL);
+                const data = await response.json();
+
+                loadingState.style.display = 'none';
+
+                if (!data || !data.data || data.data.length === 0) {
+                    emptyState.style.display = 'block';
+                    updateStats([]);
+                    return;
+                }
+
+                allPlayers = data.data;
+                updateStats(allPlayers);
+                renderTable(allPlayers);
+                tableWrapper.style.display = 'block';
+
+            } catch (err) {
+                console.error('Fetch error:', err);
+                loadingState.style.display = 'none';
+                errorState.style.display = 'block';
+            }
+        }
+
+        // ─── Update Stats ───────────────────────────────────────
+        function updateStats(players) {
+            const total = players.length;
+            const male = players.filter(p => (p.gender || '').toLowerCase() === 'male').length;
+            const female = players.filter(p => (p.gender || '').toLowerCase() === 'female').length;
+            const other = total - male - female;
+
+            totalEl.textContent = total;
+            maleEl.textContent = male;
+            femaleEl.textContent = female;
+            otherEl.textContent = other;
+        }
+
+        // ─── Render Table ───────────────────────────────────────
+        function renderTable(players) {
+            tbody.innerHTML = '';
+
+            players.forEach((player, index) => {
+                const tr = document.createElement('tr');
+                const genderClass = getGenderClass(player.gender);
+
+                tr.innerHTML = `
+                    <td class="row-num">${index + 1}</td>
+                    <td class="player-name">${escapeHtml(player.name || '—')}</td>
+                    <td><span class="gender-badge ${genderClass}">${escapeHtml(player.gender || '—')}</span></td>
+                    <td>${escapeHtml(String(player.age || '—'))}</td>
+                    <td class="discord-id">${escapeHtml(player.discord || '—')}</td>
+                    <!-- <td>${escapeHtml(player.phone || '—')}</td> -->
+                    <td>${escapeHtml(player.gameid || '—')}</td>
+                    <td class="reg-date">${escapeHtml(player.date || '—')}</td>
+                `;
+
+                tbody.appendChild(tr);
+            });
+        }
+
+        function getGenderClass(gender) {
+            if (!gender) return 'other';
+            const g = gender.toLowerCase();
+            if (g === 'male') return 'male';
+            if (g === 'female') return 'female';
+            return 'other';
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // ─── Search / Filter ────────────────────────────────────
+        searchInput.addEventListener('input', () => {
+            const query = searchInput.value.toLowerCase().trim();
+
+            if (!query) {
+                renderTable(allPlayers);
+                tableWrapper.style.display = allPlayers.length ? 'block' : 'none';
+                noResults.style.display = 'none';
+                return;
+            }
+
+            const filtered = allPlayers.filter(p =>
+                (p.name || '').toLowerCase().includes(query) ||
+                (p.discord || '').toLowerCase().includes(query) ||
+                (p.gameid || '').toLowerCase().includes(query) ||
+                (p.phone || '').toLowerCase().includes(query)
+            );
+
+            if (filtered.length === 0) {
+                tableWrapper.style.display = 'none';
+                noResults.style.display = 'block';
+            } else {
+                noResults.style.display = 'none';
+                tableWrapper.style.display = 'block';
+                renderTable(filtered);
+            }
+        });
+
+        // ─── Refresh Button ─────────────────────────────────────
+        refreshBtn.addEventListener('click', () => {
+            refreshBtn.classList.add('spinning');
+            fetchPlayers().finally(() => {
+                setTimeout(() => refreshBtn.classList.remove('spinning'), 600);
+            });
+        });
+
+        retryBtn.addEventListener('click', fetchPlayers);
+
+        // ─── Initial Load ───────────────────────────────────────
+        fetchPlayers();
+    </script>
+</body>
+
+</html>

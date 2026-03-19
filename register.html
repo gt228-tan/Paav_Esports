@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PAAV Esports — Player Registration</title>
+    <meta name="description" content="Register as a player for PAAV Esports. Join our competitive gaming community today.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./CSS/paav.css">
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-inner">
+            <a href="index.html" class="navbar-brand">PAAV ESPORTS</a>
+            <ul class="navbar-links">
+                <li><a href="index.html" class="active">Home</a></li>
+                <li><a href="memories.html">Memories</a></li>
+                <li><a href="register.html">Register</a></li>
+                <li><a href="players.html">Players</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Centered Form -->
+    <div class="form-center-wrapper">
+        <div class="page-container narrow">
+            <div class="card">
+                <div class="top-accent"></div>
+
+                <!-- Header -->
+                <div class="section-header">
+                    <h1>PAAV ESPORTS</h1>
+                    <p>Player Registration Portal</p>
+                    <div class="divider"></div>
+                </div>
+
+                <!-- Form -->
+                <form name="paav" id="registration-form" autocomplete="off">
+
+                    <div class="form-group">
+                        <label for="field-name">Player Name</label>
+                        <div class="input-wrapper">
+                            <input type="text" id="field-name" name="name" placeholder="Enter your name" required minlength="2">
+                            <span class="icon">👤</span>
+                        </div>
+                    </div>
+
+                    <!-- Gender -->
+                    <div class="form-group">
+                        <label for="field-gender">Gender</label>
+                        <div class="input-wrapper">
+                            <select id="field-gender" name="gender" required>
+                                <option value="" disabled selected>Select gender</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                                <option value="Prefer not to say">Prefer not to say</option>
+                            </select>
+                            <span class="icon">⚧</span>
+                        </div>
+                    </div>
+
+                    <!-- Age -->
+                    <div class="form-group">
+                        <label for="field-age">Age</label>
+                        <div class="input-wrapper">
+                            <input type="number" id="field-age" name="age" placeholder="Your age" required min="13" max="99">
+                            <span class="icon">🎂</span>
+                        </div>
+                    </div>
+
+                    <!-- Discord -->
+                    <div class="form-group">
+                        <label for="field-discord">Discord ID</label>
+                        <div class="input-wrapper">
+                            <input type="text" id="field-discord" name="discord" placeholder="e.g. username#1234" required>
+                            <span class="icon">💬</span>
+                        </div>
+                    </div>
+
+                    <!-- Phone -->
+                    <div class="form-group">
+                        <label for="field-phone">Phone Number</label>
+                        <div class="input-wrapper">
+                            <input type="tel" id="field-phone" name="phone" placeholder="Your phone number" required pattern="[0-9]{10,15}">
+                            <span class="icon">📱</span>
+                        </div>
+                    </div>
+
+                    <!-- Game ID -->
+                    <div class="form-group">
+                        <label for="field-gameid">In-Game ID</label>
+                        <div class="input-wrapper">
+                            <input type="text" id="field-gameid" name="gameid" placeholder="Your in-game ID" required>
+                            <span class="icon">🎮</span>
+                        </div>
+                    </div>
+
+                    <!-- Hidden Date Field -->
+                    <input type="hidden" id="field-date" name="date" value="">
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="submit-btn" id="submit-btn">
+                        <span class="btn-text">REGISTER NOW</span>
+                        <div class="spinner"></div>
+                    </button>
+
+                    <!-- Message -->
+                    <div class="message" id="form-message"></div>
+                </form>
+
+                <!-- Footer -->
+                <div class="page-footer" style="margin-top: 1.5rem;">
+                    <a href="players.html" class="form-footer-link">
+                        VIEW REGISTERED PLAYERS →
+                    </a>
+                    <br>
+                    &copy; 2026 <span>PAAV ESPORTS</span> — All Rights Reserved
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbyZ5Ib2bmYLuAC6oBb111vb1pjab6MSkWGgxMShIS8Nf5tbrd5G9qOuYkbjbUZfizfp/exec';
+
+        const form = document.getElementById('registration-form');
+        const submitBtn = document.getElementById('submit-btn');
+        const msgBox = document.getElementById('form-message');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            // Set current timestamp
+            const now = new Date();
+            document.getElementById('field-date').value = now.toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
+
+            // Disable & show loading
+            submitBtn.classList.add('loading');
+            submitBtn.disabled = true;
+            msgBox.className = 'message';   // reset
+
+            try {
+                const response = await fetch(scriptURL, {
+                    method: 'POST',
+                    body: new FormData(form)
+                });
+
+                // Show success
+                msgBox.innerHTML = '<span class="msg-icon">🎉</span>Registration successful! Welcome aboard, soldier. We\'ll contact you soon.';
+                msgBox.className = 'message success';
+
+                // Reset form after a short delay
+                setTimeout(() => {
+                    form.reset();
+                }, 1500);
+
+            } catch (error) {
+                msgBox.innerHTML = '<span class="msg-icon">⚠️</span>Something went wrong. Please try again later.';
+                msgBox.className = 'message error';
+            } finally {
+                submitBtn.classList.remove('loading');
+                submitBtn.disabled = false;
+            }
+        });
+    </script>
+</body>
+
+</html>
