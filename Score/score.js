@@ -1,5 +1,5 @@
 
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz-Mc_AmHT8n0R99yS6UmbXJPo7b2f9WrNYk2NJMSFhlHqccxXklELQqrupOj4mZXD5/exec";
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxePPblp4M3iKOiVWWtTMoElSedm0aApqj5W7mjbeh7RoTgdUMNRsaXQwlCPdKJw33A/exec";
 
 document.addEventListener("DOMContentLoaded", () => {
   fetchMatchData();
