@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PAAV Esports — Match Scorecard</title>
+    <meta name="description" content="Live match updates, scores, and results for PAAV Esports tournaments.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../CSS/paav.css">
+    <link rel="stylesheet" href="scorecard.css">
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-inner">
+            <a href="../index.html" class="navbar-brand">PAAV ESPORTS</a>
+            <ul class="navbar-links">
+                <li><a href="../index.html">Home</a></li>
+                <li><a href="../memories.html">Memories</a></li>
+                <li><a href="scorecard.html" class="active">ScoreCard</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Page Content -->
+    <div class="page-container">
+
+        <!-- Hero Section -->
+        <section class="hero">
+            <h1>MATCH <span class="highlight">UPDATES</span></h1>
+        </section>
+
+        
+        <div class="quick-stats" id="match-stats">
+            <div class="quick-stat">
+                <div class="stat-value" id="stat-total">—</div>
+                <div class="stat-name">Total Matches</div>
+            </div>
+            <div class="quick-stat">
+                <div class="stat-value" id="stat-completed">—</div>
+                <div class="stat-name">Completed</div>
+            </div>
+            <div class="quick-stat">
+                <div class="stat-value" id="stat-ongoing">—</div>
+                <div class="stat-name">Live</div>
+            </div>
+            <div class="quick-stat">
+                <div class="stat-value" id="stat-upcoming">—</div>
+                <div class="stat-name">Upcoming</div>
+            </div>
+        </div>
+
+        <!-- Loading State -->
+        <div class="loading-state" id="loading-state">
+            <div class="loading-spinner"></div>
+            <p>LOADING MATCHES</p>
+        </div>
+
+        <!-- Error State -->
+        <div class="error-state" id="error-state" style="display:none;">
+            <div class="error-icon">⚠️</div>
+            <h3>FAILED TO LOAD</h3>
+            <p id="error-message">Could not fetch match data.</p>
+            <button class="retry-btn" onclick="fetchMatchData()">🔄 RETRY</button>
+        </div>
+
+        <!-- Matches Content (hidden until data loads) -->
+        <div id="matches-content" style="display:none;">
+
+            <!-- ═══ ONGOING / LIVE ═══ -->
+            <section class="match-category" id="ongoing-section">
+                <div class="category-header">
+                    <div class="category-indicator ongoing-indicator"></div>
+                    <h2 class="category-title">🔴 LIVE MATCHES</h2>
+                    <div class="category-line"></div>
+                </div>
+                <div class="matches-grid" id="ongoing-grid"></div>
+                <div class="category-empty" id="ongoing-empty" style="display:none;">
+                    <p>No live matches right now</p>
+                </div>
+            </section>
+
+            <!-- ═══ UPCOMING ═══ -->
+            <section class="match-category" id="upcoming-section">
+                <div class="category-header">
+                    <div class="category-indicator upcoming-indicator"></div>
+                    <h2 class="category-title">📅 UPCOMING MATCHES</h2>
+                    <div class="category-line"></div>
+                </div>
+                <div class="matches-grid" id="upcoming-grid"></div>
+                <div class="category-empty" id="upcoming-empty" style="display:none;">
+                    <p>No upcoming matches scheduled</p>
+                </div>
+            </section>
+
+            <!-- ═══ COMPLETED ═══ -->
+            <section class="match-category" id="completed-section">
+                <div class="category-header">
+                    <div class="category-indicator completed-indicator"></div>
+                    <h2 class="category-title">✅ COMPLETED MATCHES</h2>
+                    <div class="category-line"></div>
+                </div>
+                <div class="matches-grid" id="completed-grid"></div>
+                <div class="category-empty" id="completed-empty" style="display:none;">
+                    <p>No completed matches yet</p>
+                </div>
+            </section>
+
+        </div>
+
+        <!-- Footer -->
+        <div class="page-footer">
+            &copy; 2026 <span>PAAV ESPORTS</span> — All Rights Reserved <br>
+            Made with ❤️ by <a href="https://www.instagram.com/gt._.edits/">GT Edits</a>
+        </div>
+
+    </div>
+
+    <script src="score.js"></script>
+</body>
+
+</html>
